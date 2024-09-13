@@ -1,1 +1,0 @@
-module['exports']=function foo(_0x475585){return _0x475585;};
