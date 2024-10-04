@@ -16,11 +16,26 @@ def gen_adv_samples(model, fn_list, pad_percent=0.1, step_size=0.001, thres=0.5)
             out[0][idx] = best_idx
         return out
 
+    import numpy as np
+
+    def fgsm(model, inp_emb, pad_idx, pad_len, e, step_size):
+        # Enable gradient computation
+        inp_emb_tensor = tf.convert_to_tensor(inp_emb, dtype=tf.float32)
+        with tf.GradientTape() as tape:
+            tape.watch(inp_emb_tensor)
+            predictions = model(inp_emb_tensor[None, :])  # Add batch dimension
+            loss = tf.keras.losses.binary_crossentropy(np.array([1.0]), predictions)  # Assuming you're targeting benign class
+
+        # Compute the gradient
+        gradient = tape.gradient(loss, inp_emb_tensor)
+        adv_emb = inp_emb + step_size * tf.sign(gradient)  # Apply FGSM step
+
+        return adv_emb.numpy(), gradient.numpy(), loss.numpy()
 
     max_len = int(model.input_shape[1])
     emb_layer = model.layers[1]
     emb_weight = emb_layer.get_weights()[0]
-    inp2emb = tf.keras.backend.function()([model.input]+ [K.learning_phase()], [emb_layer.output]) # [function] Map sequence to embedding
+    inp2emb = tf.keras.backend.function()([model.input]+ [tf.keras.backend.learning_phase()], [emb_layer.output]) # [function] Map sequence to embedding
 
     # Build neighbor searches
     neigh = NearestNeighbors(1)
