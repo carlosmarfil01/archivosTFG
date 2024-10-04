@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import tensorflow as tf
-from keras.backend.tensorflow_backend import set_session
+# from keras.backend.tensorflow_backend import set_session
 from MalGAN_preprocess import preprocess
 
 def fgsm(model, inp, pad_idx, pad_len, e, step_size=0.001):
@@ -28,10 +28,10 @@ def fgsm(model, inp, pad_idx, pad_len, e, step_size=0.001):
 
     return adv, g, loss_value
 
-def limit_gpu_memory(per):
-    config = tf.ConfigProto()
-    config.gpu_options.per_process_gpu_memory_fraction = per
-    set_session(tf.Session(config=config))
+# def limit_gpu_memory(per):
+#     config = tf.ConfigProto()
+#     config.gpu_options.per_process_gpu_memory_fraction = per
+#     set_session(tf.Session(config=config))
 
     
 def train_test_split(data, label, val_size=0.1):
