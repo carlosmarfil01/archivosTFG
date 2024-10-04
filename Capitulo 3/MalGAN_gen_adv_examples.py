@@ -35,7 +35,7 @@ def gen_adv_samples(model, fn_list, pad_percent=0.1, step_size=0.001, thres=0.5)
     max_len = int(model.input_shape[1])
     emb_layer = model.layers[1]
     emb_weight = emb_layer.get_weights()[0]
-    inp2emb = tf.keras.backend.function()([model.input]+ [tf.keras.backend.learning_phase()], [emb_layer.output]) # [function] Map sequence to embedding
+    inp2emb = tf.keras.backend.function([model.input]+ [tf.keras.backend.learning_phase()], [emb_layer.output]) # [function] Map sequence to embedding
 
     # Build neighbor searches
     neigh = NearestNeighbors(1)
