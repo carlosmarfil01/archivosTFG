@@ -1,5 +1,6 @@
 from sklearn.neighbors import NearestNeighbors
-from keras import backend as K
+# from keras import backend as K
+import tensorflow as tf
 import MalGAN_utils
 from MalGAN_preprocess import preprocess
 import numpy as np
@@ -19,7 +20,7 @@ def gen_adv_samples(model, fn_list, pad_percent=0.1, step_size=0.001, thres=0.5)
     max_len = int(model.input_shape[1])
     emb_layer = model.layers[1]
     emb_weight = emb_layer.get_weights()[0]
-    inp2emb = K.function([model.input]+ [K.learning_phase()], [emb_layer.output]) # [function] Map sequence to embedding
+    inp2emb = tf.keras.backend.function()([model.input]+ [K.learning_phase()], [emb_layer.output]) # [function] Map sequence to embedding
 
     # Build neighbor searches
     neigh = NearestNeighbors(1)
